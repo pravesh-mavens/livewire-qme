@@ -4,6 +4,7 @@
     </IfModule>
 
     RewriteEngine On
+    RewriteRule ^(.*)\.[\d]{10}\.(css|js|png|jpeg|jpg)$ $1.$2 [L]
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
