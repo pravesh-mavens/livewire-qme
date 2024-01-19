@@ -5,7 +5,7 @@ namespace App\Livewire\Quote;
 use Livewire\Component;
 use App\Services\CurlService;
 use App\Livewire\Quote\Index as QuoteIndex;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Livewire\Attributes\Validate;
 
 class Create extends Component
 {
@@ -15,6 +15,12 @@ class Create extends Component
     protected $brand = [];
     protected $category = [];
     protected $groupDiscount = [];
+
+    #[Validate]
+    public $title = 'title';
+    #[Validate]
+    public $content = 'content';
+ 
 
     public function boot(CurlService $curl)
     {
@@ -46,9 +52,41 @@ class Create extends Component
         ]);
     }
 
-    public function index(){
+    public function back(){
         $this->redirect(QuoteIndex::class, navigate: true);
     }
+
+    public function rules()
+    {
+        return [
+            'title' => ['required','min:5'],
+            'content' => ['required','min:5'],
+        ];
+    }
+
+    public function messages() 
+    {
+        return [
+            'title.required' => 'The :attribute are missing.',
+            'title.min' => 'The :attribute is too short. Atleast 5 characters are required.',
+            'content.required' => 'The :attribute are missing.',
+            'content.min' => 'The :attribute is too short. Atleast 5 characters are required.',
+        ];
+    }
+ 
+    
+    public function save()
+    {
+        dump($this->validate());
+
+        $this->form->store();
+
+    }
+
+    // public function updated($name, $value) 
+    // {
+    //     dump($name, $value);
+    // }
 }
 
 // try {
