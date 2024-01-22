@@ -1,4 +1,4 @@
-<div class="row wrapper border-bottom white-bg page-heading">
+<div class="row wrapper border-bottom white-bg page-heading bg-white">
     <style>
         .-z-1 {
             z-index: -1;
@@ -43,6 +43,10 @@
     <div class="grid grid-cols-1 gap-4">
         <h2 class="title-page">New Quote</h2>
         <a href="javascript:void(0)" wire:click="back" class="col-start-2 btn btn-success btn-sm pull-right m-t-md">Back</a>
+    </div>
+    <div>
+        @js($productSelection->implode('qty', ', '))
+        @js($productSelection->implode('category', ', '))
     </div>
 
     <form wire:submit='save'>
@@ -110,16 +114,33 @@
                     </x-table.tr>
                 </x-table.thead>
                 <x-table.tbody>
-                    <x-table.tr>
+                @foreach($productSelection as $key => $input)
+                    <x-table.tr wire:key="product{{ $key }}">
                         <x-table.td class="w-20">
-                            <x-forms.input type="number" name="qty[]" value="1"/>
+                            <x-forms.input type="number" name="qty" wire:model.live="productSelection.{{$key}}.qty"/>
                         </x-table.td>
-                        <x-table.td class="w-1/6"></x-table.td>
-                        <x-table.td class="w-3/5"></x-table.td>
+                        <x-table.td class="w-1/7">
+                        </x-table.td>
+                        <x-table.td class="w-3/5">
+                            <div class="grid grid-cols-3">
+                                <x-forms.select name="inputs[]">
+                                    <x-forms.selectoption name="category" wire:model.live="productSelection.{{$key}}.category" text="Select Category"/>
+                                    @foreach($category as $key=>$value)
+                                        <x-forms.selectoption value="{{$value['id']}}" data-catid="{{$value['category_id']}}" text="{{$value['name']}}" />
+                                    @endforeach
+                                </x-forms.select>
+                                @if(isset($products) && !empty($products))
+                                <x-forms.select wire:model.live="productSelection.{{$key}}.product" name="product">
+                                    <x-forms.selectoption value="" text="Select Product" />
+                                </x-forms.select>
+                                @endif
+                            </div>
+                        </x-table.td>
                         <x-table.td>$0.00</x-table.td>
                         <x-table.td>$0.00</x-table.td>
                         <x-table.td class="w-10"></x-table.td>
                     </x-table.tr>
+                @endforeach
                 </x-table.tbody>
             </x-table.table>
         </div>

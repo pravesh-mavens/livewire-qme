@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Services\CurlService;
 use App\Livewire\Quote\Index as QuoteIndex;
 use Livewire\Attributes\Validate;
+use Illuminate\Support\Collection;
 
 class Create extends Component
 {
@@ -15,6 +16,8 @@ class Create extends Component
     protected $brand = [];
     protected $category = [];
     protected $groupDiscount = [];
+
+    public Collection $productSelection;
 
     #[Validate]
     public $title = 'title';
@@ -40,10 +43,12 @@ class Create extends Component
     public $paymentterm;
     #[Validate]
     public $termcondition;
- 
 
-    public function boot(CurlService $curl)
+    public function mount (CurlService $curl)
     {
+        $this->productSelection = collect();
+        $this->productSelection->push(['qty' => 1,'category'=>null, 'product'=>null]);
+
         $curlData = [];
         $curlData['headers'] = '';
         $curlData['body'] = [
@@ -63,6 +68,13 @@ class Create extends Component
 
         $this->paymentterm = $this->brand['payment_terms'];
         $this->termcondition = $this->brand['term_condition'];
+
+    }
+ 
+
+    public function boot()
+    {
+        
     }
 
     public function render()
@@ -121,10 +133,15 @@ class Create extends Component
     
     public function save()
     {
+        sleep(5);
         $this->validate();
-
         // $this->form->store();
 
+    }
+
+    public function updated($name, $value){
+        dump($name, $value);
+        // dump($this->productSelection[$key]);
     }
 
     // public function updated($name, $value) 
