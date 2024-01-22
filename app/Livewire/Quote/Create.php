@@ -19,7 +19,27 @@ class Create extends Component
     #[Validate]
     public $title = 'title';
     #[Validate]
-    public $content = 'content';
+    public $name;
+    #[Validate]
+    public $email;
+    #[Validate]
+    public $phone;
+    #[Validate]
+    public $street1;
+    #[Validate]
+    public $street2;
+    #[Validate]
+    public $city;
+    #[Validate]
+    public $state;
+    #[Validate]
+    public $pincode;
+    #[Validate]
+    public $country = "US";
+    #[Validate]
+    public $paymentterm;
+    #[Validate]
+    public $termcondition;
  
 
     public function boot(CurlService $curl)
@@ -40,6 +60,9 @@ class Create extends Component
         $this->brand = $response['response']['brand_setting'];
         $this->category = $response['response']['category'];
         $this->groupDiscount = $response['response']['group_discount'];
+
+        $this->paymentterm = $this->brand['payment_terms'];
+        $this->termcondition = $this->brand['term_condition'];
     }
 
     public function render()
@@ -60,26 +83,47 @@ class Create extends Component
     {
         return [
             'title' => ['required','min:5'],
-            'content' => ['required','min:5'],
+            'name'=>['required'],
+            'email'=>['required','email:filter,rfc,spoof'],
+            'phone'=>['required'],
+            'street1'=>['required'],
+            'street2'=>['required'],
+            'city'=>['required'],
+            'state'=>['required'],
+            'pincode'=>['required','regex:/^\d{5}(?:[-\s]\d{4})?$/'],
+            'country'=>['required'],
+            'paymentterm'=>['required'],
+            'termcondition'=>['required']
         ];
     }
 
     public function messages() 
     {
         return [
-            'title.required' => 'The :attribute are missing.',
+            'title.required' => 'The :attribute can not be empty.',
             'title.min' => 'The :attribute is too short. Atleast 5 characters are required.',
-            'content.required' => 'The :attribute are missing.',
-            'content.min' => 'The :attribute is too short. Atleast 5 characters are required.',
+            'name.required' => 'The :attribute can not be empty.',
+            'email.required' => 'The :attribute can not be empty.',
+            'email.email' => 'The :attribute is not valid.',
+            'phone.required' => 'The :attribute can not be empty.',
+            'street1.required' => 'The :attribute can not be empty.',
+            'street2.required' => 'The :attribute can not be empty.',
+            'city.required' => 'The :attribute can not be empty.',
+            'state.required' => 'The :attribute can not be empty.',
+            'pincode.required' => 'The :attribute can not be empty.',
+            'pincode.regex' => 'The :attribute is not valid.',
+            'country.required' => 'The :attribute can not be empty.',
+            'paymentterm.required' => 'The :attribute can not be empty.',
+            'termcondition.required' => 'The :attribute can not be empty.',
         ];
     }
  
     
     public function save()
     {
-        dump($this->validate());
+        $this->validate();
 
-        $this->form->store();
+        // $this->form->store();
 
     }
 
