@@ -44,63 +44,68 @@
         <h2 class="title-page">New Quote</h2>
         <a href="javascript:void(0)" wire:click="back" class="col-start-2 btn btn-success btn-sm pull-right m-t-md">Back</a>
     </div>
-    <div>
+    {{-- <div>
         @js($productSelection->implode('qty', ', '))
         @js($productSelection->implode('category', ', '))
-    </div>
+    </div> --}}
 
     <form wire:submit='save'>
         {{-- Form Feilds --}}
         <div class="flex">
             <div class="relative w-1/3 z-0 w-1/3 m-2">
-                <x-forms.input type="text" wire:model.change="title" name="title" placeholder=" "/>
+                <x-forms.input type="text" wire:model.live="title" name="title" placeholder=" "/>
                 <x-forms.label text="Project Name" for="title" />
             </div>
         </div>
         <div class="flex">
             <div class="relative w-1/3 z-0 m-2">
-                <x-forms.input type="text" wire:model.change="name" name="name" placeholder=" "/>
+                <x-forms.input type="text" wire:model.live="name" name="name" placeholder=" "/>
                 <x-forms.label text="Customer Name" for="name" />
             </div>
             <div class="relative w-1/3 z-0 m-2">
-                <x-forms.input type="text" wire:model.change="email" name="email" placeholder=" "/>
+                <x-forms.input type="text" wire:model.live="email" name="email" placeholder=" "/>
                 <x-forms.label text="Customer Email" for="email" />
             </div>
             <div class="relative w-1/3 z-0 m-2">
-                <x-forms.input type="text" wire:model.change="phone" name="phone" placeholder=" "/>
+                <x-forms.input type="text" wire:model.live="phone" name="phone" placeholder=" "/>
                 <x-forms.label text="Customer Phone" for="phone" />
             </div>
         </div>
         <div class="flex">
             <div class="relative w-1/2 z-0 m-2">
-                <x-forms.input type="text" wire:model.change="street1" name="street1" placeholder=" "/>
+                <x-forms.input type="text" wire:model.live="street1" name="street1" placeholder=" "/>
                 <x-forms.label text="Street 1" for="street1" />
             </div>
             <div class="relative w-1/2 z-0 m-2">
-                <x-forms.input type="text" wire:model.change="street2" name="street2" placeholder=" " />
+                <x-forms.input type="text" wire:model.live="street2" name="street2" placeholder=" " />
                 <x-forms.label text="Street 2" for="street2" />
             </div>
         </div>
         <div class="flex">
             <div class="relative w-1/4 z-0 m-2">
-                <x-forms.input type="text" wire:model.change="city" name="city" placeholder=" "/>
+                <x-forms.input type="text" wire:model.live="city" name="city" placeholder=" "/>
                 <x-forms.label text="City" for="city" />
             </div>
             <div class="relative w-1/4 z-0 m-2">
-                <x-forms.input type="text" wire:model.change="state" name="state" placeholder=" "/>
+                <x-forms.input type="text" wire:model.live="state" name="state" placeholder=" "/>
                 <x-forms.label text="State" for="state" />
             </div>
             <div class="relative w-1/4 z-0 m-2">
-                <x-forms.input type="text" wire:model.change="pincode" name="pincode" placeholder=" "/>
+                <x-forms.input type="text" wire:model.live="pincode" name="pincode" placeholder=" "/>
                 <x-forms.label text="Pin Code" for="pincode" />
             </div>
             <div class="relative w-1/4 z-0 m-2">
-                <x-forms.input type="text" wire:model.change="country" name="country" placeholder=" " readonly/>
+                <x-forms.input type="text" wire:model.live="country" name="country" placeholder=" " readonly/>
                 <x-forms.label text="Country" for="country" />
             </div>
         </div>
 
         {{-- Table Feilds --}}
+        <div class="grid grid-col-4 grid-gap-4">
+            <div class="grid grid-cols-subgrid gap-4 col-span-4">
+                <div class="col-start-4 inset-y-0 right-0" wire:click="addmore">Add More</div>
+            </div>
+        </div>
         <div class="flex m-5">
             <x-table.table class="w-full">
                 <x-table.thead>
@@ -114,23 +119,23 @@
                     </x-table.tr>
                 </x-table.thead>
                 <x-table.tbody>
-                @foreach($productSelection as $key => $input)
-                    <x-table.tr wire:key="product{{ $key }}">
+                @foreach($productSelection as $row => $input)
+                    <x-table.tr wire:key="{{ $row }}">
                         <x-table.td class="w-20">
-                            <x-forms.input type="number" name="qty" wire:model.live="productSelection.{{$key}}.qty"/>
+                            <x-forms.input type="number" name="qty" wire:model.live="productSelection.{{$row}}.qty" wire:key="{{ $row }}"/>
                         </x-table.td>
                         <x-table.td class="w-1/7">
                         </x-table.td>
                         <x-table.td class="w-3/5">
                             <div class="grid grid-cols-3">
-                                <x-forms.select name="inputs[]">
-                                    <x-forms.selectoption name="category" wire:model.live="productSelection.{{$key}}.category" text="Select Category"/>
+                                <x-forms.select name="category" wire:model.live="productSelection.{{$row}}.category">
+                                    <x-forms.selectoption name="category" text="Select Category"/>
                                     @foreach($category as $key=>$value)
                                         <x-forms.selectoption value="{{$value['id']}}" data-catid="{{$value['category_id']}}" text="{{$value['name']}}" />
                                     @endforeach
                                 </x-forms.select>
                                 @if(isset($products) && !empty($products))
-                                <x-forms.select wire:model.live="productSelection.{{$key}}.product" name="product">
+                                <x-forms.select wire:model.live="productSelection.{{$row}}.product" name="product" wire:key="{{ $row }}">
                                     <x-forms.selectoption value="" text="Select Product" />
                                 </x-forms.select>
                                 @endif
@@ -138,7 +143,7 @@
                         </x-table.td>
                         <x-table.td>$0.00</x-table.td>
                         <x-table.td>$0.00</x-table.td>
-                        <x-table.td class="w-10"></x-table.td>
+                        <x-table.td class="w-10"><a href="javascript:void(0)" wire:click="removerow({{$row}})">Delete</a></x-table.td>
                     </x-table.tr>
                 @endforeach
                 </x-table.tbody>
@@ -148,13 +153,13 @@
         {{-- Addition Feilds --}}
         <div class="flex">
             <div class="relative w-full z-0 m-2">
-                <x-forms.textarea wire:model.change="paymentterm" name="paymentterm" placeholder=" " rows="5"/>
+                <x-forms.textarea wire:model.live="paymentterm" name="paymentterm" placeholder=" " rows="5"/>
                 <x-forms.label text="Payment Term" for="paymentterm" />
             </div>
         </div>
         <div class="flex">
             <div class="relative w-full z-0 m-2">
-                <x-forms.textarea wire:model.change="termcondition" name="termcondition" placeholder=" " rows="5"/>
+                <x-forms.textarea wire:model.live="termcondition" name="termcondition" placeholder=" " rows="5"/>
                 <x-forms.label text="Term Condition" for="termcondition" />
             </div>
         </div>

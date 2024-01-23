@@ -15,6 +15,7 @@ class Create extends Component
     protected $quote = [];
     protected $brand = [];
     protected $category = [];
+    protected $categoryProducts = [];
     protected $groupDiscount = [];
 
     public Collection $productSelection;
@@ -44,11 +45,19 @@ class Create extends Component
     #[Validate]
     public $termcondition;
 
-    public function mount (CurlService $curl)
+    public function mount ()
     {
         $this->productSelection = collect();
         $this->productSelection->push(['qty' => 1,'category'=>null, 'product'=>null]);
 
+        
+
+    }
+ 
+
+    public function boot()
+    {
+        $curl = new CurlService();
         $curlData = [];
         $curlData['headers'] = '';
         $curlData['body'] = [
@@ -56,10 +65,8 @@ class Create extends Component
             'category_id' => env($this->storeId . "_CATEGORY"),
             'users_id' => $this->bcCustomerId,
         ];
-
         $url = env('APP_API_URL') . 'apibcquotes/create-quote';
         $response = $curl->get($url, $curlData);
-
 
         $this->quote = $response['response']['quote_model'];
         $this->brand = $response['response']['brand_setting'];
@@ -68,13 +75,6 @@ class Create extends Component
 
         $this->paymentterm = $this->brand['payment_terms'];
         $this->termcondition = $this->brand['term_condition'];
-
-    }
- 
-
-    public function boot()
-    {
-        
     }
 
     public function render()
@@ -139,70 +139,44 @@ class Create extends Component
 
     }
 
-    public function updated($name, $value){
-        dump($name, $value);
-        // dump($this->productSelection[$key]);
+    public function updatedProductSelection($value, $key){
+        $keyData = explode(".",$key);
+
+        $index = $keyData[0];
+        $input = $keyData[1];
+
+        if($input == "category"){
+            self::getProucts($index, $value);
+        }
+        
     }
 
-    // public function updated($name, $value) 
-    // {
-    //     dump($name, $value);
-    // }
+    private function getProucts($index, $categoryId)
+    {
+        if(array_key_exists($categoryId, $this->categoryProducts)){
+            
+        } else {
+            $curl = new CurlService();
+            $curlData = [];
+            $curlData['headers'] = '';
+            $curlData['body'] = [
+                'store_id' => $this->storeId,
+                'category_id' => $categoryId,
+            ];
+            $url = env('APP_API_URL') . 'apibcquotes/get-products';
+            $result = $curl->get($url, $curlData);
+
+            if($result['code'] == 200){
+                $this->categoryProducts[$categoryId] = $result['response'];
+            }
+        }
+    }
+    
+    public function addmore(){
+        $this->productSelection->push(['qty' => 1, 'category' => null, 'product' => null]);
+    }
+
+    public function removerow($key){
+        $this->productSelection->pull($key);
+    }
 }
-
-// try {
-//     $loggedInUser = self::getLoggedInUser();
-
-//     if (!isset($loggedInUser) && empty($loggedInUser)) {
-//         throw new Exception("Please login to create an quote.", 401);
-//     }
-
-//     /* Curl for get data for create page */
-//     $curlData = [];
-//     $curlData['headers'] = '';
-//     $curlData['body'] = [
-//         'store_id' => $loggedInUser['store_id'],
-//         'category_id' => env($loggedInUser['store_id'] . "_CATEGORY"),
-//         'users_id' => $loggedInUser['id'],
-//     ];
-
-//     $url = env('APP_API_URL') . 'apibcquotes/create-quote';
-//     $response = $curl->get($url, $curlData);
-//     $request = "Modules\BCQuotes\app\Http\Requests\CreateQuotes";
-
-//     if (isset($response) && !empty($response) && $response['code'] == 200) {
-//         if (!isset($response['response']['quote_model']) && empty($response['response']['quote_model'])) {
-//             $response['response']['quote_model']['country'] = 'us';
-//             $brand_setting = $response['response']['brand_setting'];
-//             if (isset($brand_setting) && !empty($brand_setting)) {
-//                 $response['response']['quote_model']['payment_term'] = $brand_setting['payment_terms'];
-//                 $response['response']['quote_model']['term_condition'] = $brand_setting['term_condition'];
-//             } else {
-//                 throw new Exception("Your branding detail are not found. Kindly enter all the details before creating the quote.", 204);
-//             }
-//         }
-
-//         return view('bcquotes::quote.create', compact('request'))->with($response['response']);
-//     } else {
-//         throw new Exception("Unable to process request.", 204);
-//     }
-// } catch (Exception $e) {
-//     $log = [
-//         'Message' => $e->getMessage() ?: 500,
-//         'Line' => $e->getLine(),
-//         'File' => $e->getFile(),
-//         'Function' => __FUNCTION__,
-//     ];
-//     Log::channel('quotes')->critical('Exception', $log);
-// } catch (Throwable $th) {
-//     $log = [
-//         'Message' => $th->getMessage() ?: 500,
-//         'Line' => $th->getLine(),
-//         'File' => $th->getFile(),
-//         'Function' => __FUNCTION__,
-//     ];
-//     Log::channel('quotes')->critical('Throwable', $log);
-// }
-
-// return redirect()->back()->with('error', $log['Message']);
-
