@@ -134,7 +134,7 @@
                                         <x-forms.selectoption value="{{$value['id']}}" data-catid="{{$value['category_id']}}" text="{{$value['name']}}" />
                                     @endforeach
                                 </x-forms.select>
-                                @if(isset($products) && !empty($products))
+                                @if(isset($categoryProducts[$productSelection[$row]['category']]) && !empty($categoryProducts[$productSelection[$row]['category']]))
                                 <x-forms.select wire:model.live="productSelection.{{$row}}.product" name="product" wire:key="{{ $row }}">
                                     <x-forms.selectoption value="" text="Select Product" />
                                 </x-forms.select>

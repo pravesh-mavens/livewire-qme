@@ -147,15 +147,14 @@ class Create extends Component
 
         if($input == "category"){
             self::getProucts($index, $value);
+            // dump($this->categoryProducts[$this->productSelection[$index]['category']]);
         }
         
     }
 
     private function getProucts($index, $categoryId)
     {
-        if(array_key_exists($categoryId, $this->categoryProducts)){
-            
-        } else {
+        if(!array_key_exists($categoryId, $this->categoryProducts)){
             $curl = new CurlService();
             $curlData = [];
             $curlData['headers'] = '';
