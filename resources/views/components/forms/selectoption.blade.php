@@ -1,2 +1,2 @@
 @props(['text',])
-<option {{$attributes}}>{{$text}}</option>
+<option {{$attributes}}>{!!$text!!}</option>

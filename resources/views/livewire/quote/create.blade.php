@@ -122,7 +122,7 @@
                 @foreach($productSelection as $row => $input)
                     <x-table.tr wire:key="{{ $row }}">
                         <x-table.td class="w-20">
-                            <x-forms.input type="number" name="qty" wire:model.live="productSelection.{{$row}}.qty" wire:key="{{ $row }}"/>
+                            <x-forms.input type="number" name="qty" wire:model.live="productSelection.{{$row}}.qty"/>
                         </x-table.td>
                         <x-table.td class="w-1/7">
                         </x-table.td>
@@ -135,11 +135,17 @@
                                     @endforeach
                                 </x-forms.select>
                                 @if(isset($categoryProducts[$productSelection[$row]['category']]) && !empty($categoryProducts[$productSelection[$row]['category']]))
-                                <x-forms.select wire:model.live="productSelection.{{$row}}.product" name="product" wire:key="{{ $row }}">
+                                <x-forms.select wire:model.live="productSelection.{{$row}}.product" name="product">
                                     <x-forms.selectoption value="" text="Select Product" />
+                                    @foreach($categoryProducts[$productSelection[$row]['category']] as $key=>$value)
+                                        <x-forms.selectoption value="{{$value['id']}}" text="{{$value['name']}}" />
+                                    @endforeach
                                 </x-forms.select>
                                 @endif
                             </div>
+                            @if(isset($productSelection[$row]['product']) && !empty($productSelection[$row]['product']))
+                                <livewire:quote.product-detail :product="$productsDetail[$productSelection[$row]['product']]" :wire:key="$row">
+                            @endif
                         </x-table.td>
                         <x-table.td>$0.00</x-table.td>
                         <x-table.td>$0.00</x-table.td>

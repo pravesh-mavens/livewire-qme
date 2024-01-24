@@ -14,10 +14,11 @@ class Create extends Component
     protected $storeId = '3gch1lz';
     protected $quote = [];
     protected $brand = [];
-    protected $category = [];
-    protected $categoryProducts = [];
-    protected $groupDiscount = [];
-
+    
+    public $category = [];
+    public $categoryProducts = [];
+    public $productsDetail = [];
+    public $groupDiscount = [];
     public Collection $productSelection;
 
     #[Validate]
@@ -49,32 +50,32 @@ class Create extends Component
     {
         $this->productSelection = collect();
         $this->productSelection->push(['qty' => 1,'category'=>null, 'product'=>null]);
-
-        
-
     }
- 
 
     public function boot()
     {
-        $curl = new CurlService();
-        $curlData = [];
-        $curlData['headers'] = '';
-        $curlData['body'] = [
-            'store_id' => $this->storeId,
-            'category_id' => env($this->storeId . "_CATEGORY"),
-            'users_id' => $this->bcCustomerId,
-        ];
-        $url = env('APP_API_URL') . 'apibcquotes/create-quote';
-        $response = $curl->get($url, $curlData);
-
-        $this->quote = $response['response']['quote_model'];
-        $this->brand = $response['response']['brand_setting'];
-        $this->category = $response['response']['category'];
-        $this->groupDiscount = $response['response']['group_discount'];
-
-        $this->paymentterm = $this->brand['payment_terms'];
-        $this->termcondition = $this->brand['term_condition'];
+        try {
+            $curl = new CurlService();
+            $curlData = [];
+            $curlData['headers'] = '';
+            $curlData['body'] = [
+                'store_id' => $this->storeId,
+                'category_id' => env($this->storeId . "_CATEGORY"),
+                'users_id' => $this->bcCustomerId,
+            ];
+            $url = env('APP_API_URL') . 'apibcquotes/create-quote';
+            $response = $curl->get($url, $curlData);
+    
+            $this->quote = $response['response']['quote_model'];
+            $this->brand = $response['response']['brand_setting'];
+            $this->category = $response['response']['category'];
+            $this->groupDiscount = $response['response']['group_discount'];
+    
+            $this->paymentterm = $this->brand['payment_terms'];
+            $this->termcondition = $this->brand['term_condition'];
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
 
     public function render()
@@ -130,52 +131,79 @@ class Create extends Component
         ];
     }
  
-    
     public function save()
     {
         sleep(5);
         $this->validate();
-        // $this->form->store();
-
     }
 
-    public function updatedProductSelection($value, $key){
+    public function updatedProductSelection($value, $key)
+    {
         $keyData = explode(".",$key);
-
         $index = $keyData[0];
         $input = $keyData[1];
 
         if($input == "category"){
             self::getProucts($index, $value);
-            // dump($this->categoryProducts[$this->productSelection[$index]['category']]);
+        } else if($input == "product"){
+            self::getProuctDeatil($index, $value);
         }
-        
+    }
+
+    private function getProuctDeatil($index, $productId){
+        if(!array_key_exists($productId, $this->productsDetail) && $productId != ""){
+            try {                
+                $curl = new CurlService();
+                $curlData = [];
+                $curlData['headers'] = '';
+                $curlData['body'] = [
+                    'store_id' => $this->storeId,
+                    'product_id' => $productId,
+                ];
+                $url = env('APP_API_URL') . 'apibcquotes/get-product';
+                $result = $curl->get($url, $curlData);
+    
+                if($result['code'] == 200){
+                    $this->productsDetail[$productId] = $result['response'];
+                }
+            } catch (\Throwable $th) {
+                //
+            }
+        }
+
+        dump($this->productsDetail[$productId]);
     }
 
     private function getProucts($index, $categoryId)
     {
-        if(!array_key_exists($categoryId, $this->categoryProducts)){
-            $curl = new CurlService();
-            $curlData = [];
-            $curlData['headers'] = '';
-            $curlData['body'] = [
-                'store_id' => $this->storeId,
-                'category_id' => $categoryId,
-            ];
-            $url = env('APP_API_URL') . 'apibcquotes/get-products';
-            $result = $curl->get($url, $curlData);
-
-            if($result['code'] == 200){
-                $this->categoryProducts[$categoryId] = $result['response'];
+        if(!array_key_exists($categoryId, $this->categoryProducts) && $categoryId != ""){
+            try {                
+                $curl = new CurlService();
+                $curlData = [];
+                $curlData['headers'] = '';
+                $curlData['body'] = [
+                    'store_id' => $this->storeId,
+                    'category_id' => $categoryId,
+                ];
+                $url = env('APP_API_URL') . 'apibcquotes/get-products';
+                $result = $curl->get($url, $curlData);
+    
+                if($result['code'] == 200){
+                    $this->categoryProducts[$categoryId] = $result['response'];
+                }
+            } catch (\Throwable $th) {
+                //
             }
         }
     }
     
-    public function addmore(){
+    public function addmore()
+    {
         $this->productSelection->push(['qty' => 1, 'category' => null, 'product' => null]);
     }
 
-    public function removerow($key){
+    public function removerow($key)
+    {
         $this->productSelection->pull($key);
     }
 }
