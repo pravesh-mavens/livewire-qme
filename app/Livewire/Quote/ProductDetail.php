@@ -13,6 +13,7 @@ class ProductDetail extends Component
 
     public function render()
     {
+        // dump($this->product);
         return view('livewire.quote.product-detail');
     }
 }

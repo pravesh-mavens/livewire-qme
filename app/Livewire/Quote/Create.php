@@ -146,13 +146,13 @@ class Create extends Component
         if($input == "category"){
             self::getProucts($index, $value);
         } else if($input == "product"){
-            self::getProuctDeatil($index, $value);
+            self::getProuctDetail($index, $value);
         }
     }
 
-    private function getProuctDeatil($index, $productId){
+    private function getProuctDetail($index, $productId){
         if(!array_key_exists($productId, $this->productsDetail) && $productId != ""){
-            try {                
+            try {
                 $curl = new CurlService();
                 $curlData = [];
                 $curlData['headers'] = '';
@@ -171,7 +171,7 @@ class Create extends Component
             }
         }
 
-        dump($this->productsDetail[$productId]);
+        dump($this->productsDetail, $this->productSelection);
     }
 
     private function getProucts($index, $categoryId)

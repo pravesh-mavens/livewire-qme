@@ -144,7 +144,7 @@
                                 @endif
                             </div>
                             @if(isset($productSelection[$row]['product']) && !empty($productSelection[$row]['product']))
-                                <livewire:quote.product-detail :product="$productsDetail[$productSelection[$row]['product']]" :wire:key="$row">
+                                <livewire:quote.product-detail :product="$productsDetail[$productSelection[$row]['product']]" key="{{now()}}">
                             @endif
                         </x-table.td>
                         <x-table.td>$0.00</x-table.td>
