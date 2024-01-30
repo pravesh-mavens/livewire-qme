@@ -9,11 +9,15 @@ class ProductDetail extends Component
 
     public $product;
 
-    
-
     public function render()
     {
-        // dump($this->product);
         return view('livewire.quote.product-detail');
+    }
+
+    public function productCustomize($productId){
+
+        // dump($this->product);
+        $this->dispatch('toggleSlideOver');
+
     }
 }

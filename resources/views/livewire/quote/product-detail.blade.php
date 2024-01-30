@@ -1,7 +1,9 @@
 <div>
-    {{$product['name']}}
+    
     @if(isset($product['variant_option']) && !empty($product['variant_option']))
-        CUSTOMIZE
+        {{$product['name']}}
+
+        <a href="javascript:void(0)" wire:click="productCustomize({{$product['id']}})">Customize</a>
     @endif
 
     <ul>

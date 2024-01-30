@@ -33,6 +33,7 @@ class Index extends Component
             ];
             $url = env('APP_API_URL') . 'apibcquotes/view-business-setting';
             $response = $curl->get($url, $curlData);
+            // dd($response);
 
             if (!(isset($response['response']['id']) && !empty($response['response']['id']))) {
                 $this->redirect(BrandIndex::class, navigate: true);

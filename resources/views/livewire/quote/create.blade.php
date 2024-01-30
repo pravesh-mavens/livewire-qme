@@ -103,7 +103,7 @@
         {{-- Table Feilds --}}
         <div class="grid grid-col-4 grid-gap-4">
             <div class="grid grid-cols-subgrid gap-4 col-span-4">
-                <div class="col-start-4 inset-y-0 right-0" wire:click="addmore">Add More</div>
+                <div class="col-start-4 inset-y-0 right-0" wire:click="addmore" x-on:click="open = ! open">Add More</div>
             </div>
         </div>
         <div class="flex m-5">
@@ -172,7 +172,10 @@
     
         <button type="submit" class="rounded-none hover:rounded-lg bg-cyan-200 p-2">
             Save
-            <div wire:loading> Form Submiting </div>
+            <div wire:loading><svg class="animate-spin h-5 w-5 mr-3 ..." viewBox="0 0 24 24"></svg>Submiting...</div>
+            
         </button>
     </form>
+    <!-- Include the SlideOver Livewire component -->
+    <livewire:quote.customize>
 </div>

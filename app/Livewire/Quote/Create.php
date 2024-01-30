@@ -170,8 +170,6 @@ class Create extends Component
                 //
             }
         }
-
-        dump($this->productsDetail, $this->productSelection);
     }
 
     private function getProucts($index, $categoryId)
