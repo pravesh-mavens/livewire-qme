@@ -178,5 +178,8 @@
         </button>
     </form>
     <!-- Include the SlideOver Livewire component -->
-    <livewire:quote.customize :productsArray="$productSelection">
+    <div wire:loading wire:target="renderNestedComponent">
+        Loading...
+    </div>
+    <livewire:quote.customize :productsArray="$productSelection" :$loading>
 </div>

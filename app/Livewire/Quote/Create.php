@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Storage;
 
 class Create extends Component
 {
+
+    public $loading = true;
+
     protected $bcCustomerId = 2;
     protected $storeId = '3gch1lz';
     protected $quote = [];
@@ -233,5 +236,12 @@ class Create extends Component
     public function removerow($key)
     {
         $this->productSelection->pull($key);
+    }
+
+    #[on('nestedComponentLoaded')]
+    public function renderNestedComponent()
+    {
+        // Add any logic you need
+        $this->loading = false;
     }
 }

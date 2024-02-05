@@ -22,16 +22,19 @@ class Customize extends Component
     }
 
     public function render()
-    {
+    {        
         return view('livewire.quote.customize');
     }
 
     #[On('toggleSlideOver')]
     public function toggleSlideOver($product)
     {
+        
         $this->openSection = null;
         $this->productArr = $product;
         $this->isOpen = !$this->isOpen;
+        
+        $this->dispatch('nestedComponentLoaded');
     }
 
     public function toggleSection($index)
