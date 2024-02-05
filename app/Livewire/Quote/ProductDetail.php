@@ -14,10 +14,7 @@ class ProductDetail extends Component
         return view('livewire.quote.product-detail');
     }
 
-    public function productCustomize($productId){
-
-        // dump($this->product);
-        $this->dispatch('toggleSlideOver');
-
+    public function productCustomize(){
+        $this->dispatch('toggleSlideOver', $this->product);
     }
 }

@@ -16,6 +16,7 @@ class Index extends Component
     use WithPagination;
 
     protected $bcCustomerId = 2;
+    protected $storeId = '3gch1lz';
     protected $brand = false;
     protected $page=1;
     // protected $paginationTheme = 'bootstrap';
@@ -28,7 +29,7 @@ class Index extends Component
             $curlData['headers'] = '';
             $curlData['body'] = [
                 'user_id' => $this->bcCustomerId,
-                'store_id' => $this->bcCustomerId,
+                'store_id' => $this->storeId,
                 'page' => $this->page
             ];
             $url = env('APP_API_URL') . 'apibcquotes/view-business-setting';

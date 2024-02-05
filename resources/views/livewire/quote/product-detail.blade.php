@@ -3,7 +3,7 @@
     @if(isset($product['variant_option']) && !empty($product['variant_option']))
         {{$product['name']}}
 
-        <a href="javascript:void(0)" wire:click="productCustomize({{$product['id']}})">Customize</a>
+        <a href="javascript:void(0)" wire:click="productCustomize()">Customize</a>
     @endif
 
     <ul>

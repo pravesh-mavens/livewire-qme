@@ -44,3 +44,14 @@ if (!function_exists('auto_version ')) {
         }
     }
 }
+
+if (!function_exists('price_format ')) {
+    function price_format($amount, $curr = "$", $decimal = 2)
+    {
+        $number = $curr . " " . number_format((float) $amount, $decimal, '.', '');
+
+        $formatter = new NumberFormatter('en_us', NumberFormatter::CURRENCY);
+        return $formatter->formatCurrency((float) $amount, 'USD');
+    }
+}
+

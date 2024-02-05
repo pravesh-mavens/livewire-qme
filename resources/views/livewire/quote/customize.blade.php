@@ -17,10 +17,45 @@
 
                 <div class="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
                 <div class="px-4 sm:px-6">
-                    <h2 class="text-base font-semibold leading-6 text-gray-900" id="slide-over-title">Panel title</h2>
+                    <h2 class="text-base font-semibold leading-6 text-gray-900" id="slide-over-title">{{$productArr['name']??""}}</h2>
                 </div>
                 <div class="relative mt-6 flex-1 px-4 sm:px-6">
-                    <!-- Your content -->
+                    @if(isset($productArr['variant_option']) && !empty($productArr['variant_option']))
+                    @foreach($productArr['variant_option'] as $key => $value)
+                        <div class="mb-4 border border-gray-300 rounded">
+                            <button wire:click="toggleSection({{ $key }})" class="w-full px-4 py-2 bg-gray-200 hover:bg-gray-300 focus:outline-none">
+                                {{ $value['display_name'] }}
+                            </button>
+                            <div wire:key="section-{{ $key }}" class="{{ $openSection === $key ? 'block' : 'hidden' }} px-4 py-2">
+                                @if($value['type'] == "swatch")
+                                    @foreach($value['variant_option_value'] as $subindex=>$variantinfovalue)
+                                        @php
+                                            $optionValue = json_decode($variantinfovalue['value_data'], true);
+                                        @endphp
+                                        
+                                        @if(isset($optionValue['image_url']) && !empty($optionValue['image_url'])) 
+                                            <div class="caps toggle-element2" data-id="{{$value['id']}}" data-value='{{$variantinfovalue['id']}}' data-option="{{$value['variant_option_id']}}_{{$variantinfovalue['variant_option_value_id']}}" data-sort="{{$value['sort_order']}}">
+                                                    <img src="{{$optionValue['image_url']}}" onerror="this.src={{$defaultProductImg}}" class="img-fluid rounded" alt="dummy">
+                                                        <p class="text-center">{{$variantinfovalue['label']}}</p>
+                                                </div>
+                                        @else
+                                            <div class="caps toggle-element2" data-id="{{$value['id']}}" data-value='{{$variantinfovalue['id']}}' data-option="{{$value['variant_option_id']}}_{{$variantinfovalue['variant_option_value_id']}}" data-sort="{{$value['sort_order']}}">
+                                                    <span class="img-fluid rounded" style="display: flex; border:1px solid black; height:100px; width:100px; background-color:{{$optionValue['colors'][0]}}" title="{{$variantinfovalue['label']}}"></span>
+                                                        <p class="text-center">{{$variantinfovalue['label']}}</p>
+                                                </div>
+                                        @endif
+                                    @endforeach
+                                @elseif($value['type'] == "dropdown" || $value['type'] == "checkbox")
+                                    @foreach($value['variant_option_value'] as $subindex=>$variantinfovalue)
+                                        <div class="caps toggle-element number-elements" data-id="{{$value['id']}}" data-value='{{$variantinfovalue['id']}}' data-option="{{$value['variant_option_id']}}_{{$variantinfovalue['variant_option_value_id']}}" data-sort="{{$value['sort_order']}}">{{$variantinfovalue['label']}}</div>
+                                    @endforeach
+                                @elseif($value['type'] == "text" || $value['type'] == "numbers_only_text" || $value['type'] == "multi_line_text")
+                                    <input type="text" class="form-control toggle-element" data-id="{{$value['id']}}" data-sort="{{$value['sort_order']}}"/>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
+                    @endif
                 </div>
                 </div>
             </div>

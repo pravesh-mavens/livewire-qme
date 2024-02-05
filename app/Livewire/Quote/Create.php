@@ -7,6 +7,7 @@ use App\Services\CurlService;
 use App\Livewire\Quote\Index as QuoteIndex;
 use Livewire\Attributes\Validate;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 
 class Create extends Component
 {
@@ -46,10 +47,13 @@ class Create extends Component
     #[Validate]
     public $termcondition;
 
+    public $defaultProductImg;
+
     public function mount ()
     {
+        $this->defaultProductImg = Storage::disk('public')->url('default-images/index.jpeg');
         $this->productSelection = collect();
-        $this->productSelection->push(['qty' => 1,'category'=>null, 'product'=>null]);
+        $this->productSelection->push(['qty' => 1,'category'=>null, 'product'=>null, 'image'=>null]);
     }
 
     public function boot()
@@ -164,12 +168,38 @@ class Create extends Component
                 $result = $curl->get($url, $curlData);
     
                 if($result['code'] == 200){
-                    $this->productsDetail[$productId] = $result['response'];
+                    $productdetail = $result['response'];
+                    $this->productsDetail[$productId] = $productdetail;
+                    
+                    $this->productSelection->transform(function ($item, $key) use($index, $productdetail) {
+                        if($key == $index){
+                            $item['image'] = self::getProductDefaultImage($productdetail['images']);
+                            $item['base_price'] = $productdetail['calculated_price'];
+                            $item['total_price'] = $productdetail['calculated_price'];
+                        }
+                        return $item;
+                    });
+
+
                 }
             } catch (\Throwable $th) {
                 //
             }
         }
+
+    }
+
+    private function getProductDefaultImage($imagesArray){
+        if(isset($imagesArray) && !empty($imagesArray)){
+            $imageArr = array_search('1', array_column($imagesArray, 'is_thumbnail'));
+            if(!isset($imageArr) && empty($imageArr)){
+                $imageArr = array_shift($imagesArray);
+            }
+            return $imagesArray[$imageArr]['url_standard'];
+        } else {
+            return $this->defaultProductImg;
+        }
+
     }
 
     private function getProucts($index, $categoryId)
@@ -197,7 +227,7 @@ class Create extends Component
     
     public function addmore()
     {
-        $this->productSelection->push(['qty' => 1, 'category' => null, 'product' => null]);
+        $this->productSelection->push(['qty' => 1, 'category' => null, 'product' => null, 'image'=>null]);
     }
 
     public function removerow($key)

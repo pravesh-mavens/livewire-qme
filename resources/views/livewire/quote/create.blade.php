@@ -125,6 +125,7 @@
                             <x-forms.input type="number" name="qty" wire:model.live="productSelection.{{$row}}.qty"/>
                         </x-table.td>
                         <x-table.td class="w-1/7">
+                            <img src="{{$productSelection[$row]['image']}}" class="max-h-20 " onerror="this.src='{{$defaultProductImg}}'"/>
                         </x-table.td>
                         <x-table.td class="w-3/5">
                             <div class="grid grid-cols-3">
@@ -147,8 +148,8 @@
                                 <livewire:quote.product-detail :product="$productsDetail[$productSelection[$row]['product']]" key="{{now()}}">
                             @endif
                         </x-table.td>
-                        <x-table.td>$0.00</x-table.td>
-                        <x-table.td>$0.00</x-table.td>
+                        <x-table.td>{{price_format($productSelection[$row]['base_price']??0)}}</x-table.td>
+                        <x-table.td>{{price_format($productSelection[$row]['total_price']??0)}}</x-table.td>
                         <x-table.td class="w-10"><a href="javascript:void(0)" wire:click="removerow({{$row}})">Delete</a></x-table.td>
                     </x-table.tr>
                 @endforeach
@@ -177,5 +178,5 @@
         </button>
     </form>
     <!-- Include the SlideOver Livewire component -->
-    <livewire:quote.customize>
+    <livewire:quote.customize :productsArray="$productSelection">
 </div>
