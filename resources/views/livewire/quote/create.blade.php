@@ -1,4 +1,8 @@
 <div class="row wrapper border-bottom white-bg page-heading bg-white">
+    
+    <div wire:loading wire:target="renderNestedComponent">
+        Loading...
+    </div>
     <style>
         .-z-1 {
             z-index: -1;
@@ -178,8 +182,5 @@
         </button>
     </form>
     <!-- Include the SlideOver Livewire component -->
-    <div wire:loading wire:target="renderNestedComponent">
-        Loading...
-    </div>
-    <livewire:quote.customize :productsArray="$productSelection" :$loading>
+    <livewire:quote.customize :productsArray="$productSelection">
 </div>

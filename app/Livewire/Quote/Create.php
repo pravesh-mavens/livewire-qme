@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\Storage;
 
 class Create extends Component
 {
-
-    public $loading = true;
+    public $loading= false;
+    protected $listeners = ['nestedComponentLoaded'];
 
     protected $bcCustomerId = 2;
     protected $storeId = '3gch1lz';
@@ -239,9 +239,9 @@ class Create extends Component
     }
 
     #[on('nestedComponentLoaded')]
-    public function renderNestedComponent()
+    public function nestedComponentLoaded($hideShow)
     {
         // Add any logic you need
-        $this->loading = false;
+        $this->loading = $hideShow;
     }
 }

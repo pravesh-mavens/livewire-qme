@@ -10,6 +10,7 @@ class Customize extends Component
 {
     
     public $isOpen = false;
+    public $loading = false;
     public Collection $productsArray;
     public $productArr;
     public $openSection = null;
@@ -29,12 +30,14 @@ class Customize extends Component
     #[On('toggleSlideOver')]
     public function toggleSlideOver($product)
     {
-        
         $this->openSection = null;
         $this->productArr = $product;
         $this->isOpen = !$this->isOpen;
-        
-        $this->dispatch('nestedComponentLoaded');
+    }
+
+    public function rendered(){
+        $this->loading = false;
+        $this->dispatch('nestedComponentLoaded', $this->loading);
     }
 
     public function toggleSection($index)

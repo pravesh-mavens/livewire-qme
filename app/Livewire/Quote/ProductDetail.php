@@ -6,7 +6,6 @@ use Livewire\Component;
 
 class ProductDetail extends Component
 {
-
     public $product;
 
     public function render()
@@ -15,6 +14,7 @@ class ProductDetail extends Component
     }
 
     public function productCustomize(){
+        $this->dispatch('nestedComponentLoaded', true);
         $this->dispatch('toggleSlideOver', $this->product);
     }
 }
