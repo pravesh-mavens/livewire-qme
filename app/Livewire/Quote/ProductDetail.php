@@ -15,6 +15,9 @@ class ProductDetail extends Component
 
     public function productCustomize(){
         $this->dispatch('nestedComponentLoaded', true);
+
+        sleep(5);
+
         $this->dispatch('toggleSlideOver', $this->product);
     }
 }

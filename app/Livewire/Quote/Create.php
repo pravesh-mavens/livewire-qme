@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Storage;
 
 class Create extends Component
 {
-    public $loading= false;
+    public $loading= true;
     protected $listeners = ['nestedComponentLoaded'];
 
     protected $bcCustomerId = 2;

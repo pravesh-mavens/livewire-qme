@@ -1,6 +1,6 @@
 <div class="row wrapper border-bottom white-bg page-heading bg-white">
     
-    <div wire:loading wire:target="renderNestedComponent">
+    <div wire:loading wire:target="processData">
         Loading...
     </div>
     <style>
