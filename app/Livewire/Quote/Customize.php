@@ -11,7 +11,7 @@ class Customize extends Component
     
     public $isOpen = false;
     public $loading = false;
-    public Collection $productsArray;
+    public Collection $productSelection;
     public $productArr;
     public $openSection = null;
     public $defaultProductImg;
@@ -24,6 +24,7 @@ class Customize extends Component
 
     public function render()
     {        
+        dump($this->productSelection);
         return view('livewire.quote.customize');
     }
 

@@ -182,5 +182,5 @@
         </button>
     </form>
     <!-- Include the SlideOver Livewire component -->
-    <livewire:quote.customize :productsArray="$productSelection">
+    <livewire:quote.customize :productSelection="$productSelection">
 </div>
