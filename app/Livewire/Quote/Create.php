@@ -155,6 +155,8 @@ class Create extends Component
         } else if($input == "product"){
             self::getProuctDetail($index, $value);
         }
+
+        $this->dispatch('productSelection', $this->productSelection);
     }
 
     private function getProuctDetail($index, $productId){

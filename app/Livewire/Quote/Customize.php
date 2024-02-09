@@ -11,20 +11,22 @@ class Customize extends Component
     
     public $isOpen = false;
     public $loading = false;
-    public Collection $productSelection;
+
+    #[Reactive]
+    public $productSelection;
+
     public $productArr;
     public $openSection = null;
     public $defaultProductImg;
 
-    protected $listeners = ['toggleSlideOver'];
+    protected $listeners = ['toggleSlideOver', 'productSelection'];
 
     public function mount(){
         $this->defaultProductImg = Storage::disk('public')->url('default-images/index.jpeg');
     }
 
     public function render()
-    {        
-        dump($this->productSelection);
+    {
         return view('livewire.quote.customize');
     }
 
@@ -44,5 +46,10 @@ class Customize extends Component
     public function toggleSection($index)
     {
         $this->openSection = $this->openSection === $index ? null : $index;
+    }
+
+    #[on('productSelection')]
+    public function productSelection($updatedData){
+        $this->productSelection = $updatedData;
     }
 }
