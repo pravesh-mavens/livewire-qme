@@ -34,23 +34,23 @@
                                         @endphp
                                         
                                         @if(isset($optionValue['image_url']) && !empty($optionValue['image_url'])) 
-                                            <div class="caps toggle-element2" data-id="{{$value['id']}}" data-value='{{$variantinfovalue['id']}}' data-option="{{$value['variant_option_id']}}_{{$variantinfovalue['variant_option_value_id']}}" data-sort="{{$value['sort_order']}}">
-                                                    <img src="{{$optionValue['image_url']}}" onerror="this.src={{$defaultProductImg}}" class="img-fluid rounded" alt="dummy">
-                                                        <p class="text-center">{{$variantinfovalue['label']}}</p>
-                                                </div>
+                                            <div class="caps toggle-element2" wire:click='addOptions({{$value['id']}},{{$variantinfovalue['id']}})'>
+                                                <img src="{{$optionValue['image_url']}}" onerror="this.src={{$defaultProductImg}}" class="img-fluid rounded" alt="dummy">
+                                                <p class="text-center">{{$variantinfovalue['label']}}</p>
+                                            </div>
                                         @else
-                                            <div class="caps toggle-element2" data-id="{{$value['id']}}" data-value='{{$variantinfovalue['id']}}' data-option="{{$value['variant_option_id']}}_{{$variantinfovalue['variant_option_value_id']}}" data-sort="{{$value['sort_order']}}">
-                                                    <span class="img-fluid rounded" style="display: flex; border:1px solid black; height:100px; width:100px; background-color:{{$optionValue['colors'][0]}}" title="{{$variantinfovalue['label']}}"></span>
-                                                        <p class="text-center">{{$variantinfovalue['label']}}</p>
-                                                </div>
+                                            <div class="caps toggle-element2" wire:click='addOptions({{$value['id']}}, {{$variantinfovalue['id']}})'>
+                                                <span class="img-fluid rounded" style="display: flex; border:1px solid black; height:100px; width:100px; background-color:{{$optionValue['colors'][0]}}" title="{{$variantinfovalue['label']}}"></span>
+                                                <p class="text-center">{{$variantinfovalue['label']}}</p>
+                                            </div>
                                         @endif
                                     @endforeach
                                 @elseif($value['type'] == "dropdown" || $value['type'] == "checkbox")
                                     @foreach($value['variant_option_value'] as $subindex=>$variantinfovalue)
-                                        <div class="caps toggle-element number-elements" data-id="{{$value['id']}}" data-value='{{$variantinfovalue['id']}}' data-option="{{$value['variant_option_id']}}_{{$variantinfovalue['variant_option_value_id']}}" data-sort="{{$value['sort_order']}}">{{$variantinfovalue['label']}}</div>
+                                        <div class="caps toggle-element number-elements" wire:click='addOptions({{$value['id']}}, {{$variantinfovalue['id']}})'>{{$variantinfovalue['label']}}</div>
                                     @endforeach
                                 @elseif($value['type'] == "text" || $value['type'] == "numbers_only_text" || $value['type'] == "multi_line_text")
-                                    <input type="text" class="form-control toggle-element" data-id="{{$value['id']}}" data-sort="{{$value['sort_order']}}"/>
+                                    <input type="text" class="form-control toggle-element" wire:change='addOptions({{$value['id']}}, $event.target.value)'/>
                                 @endif
                             </div>
                         </div>

@@ -11,9 +11,9 @@ class Customize extends Component
     
     public $isOpen = false;
     public $loading = false;
+    public $key;
 
-    #[Reactive]
-    public $productSelection;
+    public Collection $productSelection;
 
     public $productArr;
     public $openSection = null;
@@ -40,6 +40,14 @@ class Customize extends Component
 
     public function rendered(){
         $this->loading = false;
+
+        if(isset($this->productArr) && !empty($this->productArr)){
+            $this->productSelection->map(function($item, $key){
+                if($item['product'] == $this->productArr['id'])
+                    $this->key = $key;
+            });
+        }
+
         $this->dispatch('nestedComponentLoaded', $this->loading);
     }
 
@@ -50,6 +58,10 @@ class Customize extends Component
 
     #[on('productSelection')]
     public function productSelection($updatedData){
-        $this->productSelection = $updatedData;
+        $this->productSelection = collect($updatedData);
+    }
+
+    public function addOptions($variantId, $variantOptionId=false){
+        dump($variantId, $variantOptionId);
     }
 }
