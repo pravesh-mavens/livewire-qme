@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 class Create extends Component
 {
     public $loading= true;
-    protected $listeners = ['nestedComponentLoaded'];
+    protected $listeners = ['nestedComponentLoaded', 'updateProductSelction'];
 
     protected $bcCustomerId = 2;
     protected $storeId = '3gch1lz';
@@ -245,5 +245,10 @@ class Create extends Component
     {
         // Add any logic you need
         $this->loading = $hideShow;
+    }
+    #[on('updateProductSelction')]
+    public function updateProductSelction($updated)
+    {
+        $this->productSelection = collect($updated);
     }
 }

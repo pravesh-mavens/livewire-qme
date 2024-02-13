@@ -51,6 +51,8 @@
                                     @endforeach
                                 @elseif($value['type'] == "text" || $value['type'] == "numbers_only_text" || $value['type'] == "multi_line_text")
                                     <input type="text" class="form-control toggle-element" wire:change='addOptions({{$value['id']}}, $event.target.value)'/>
+                                @else
+                                    NOT CONFIGURED
                                 @endif
                             </div>
                         </div>

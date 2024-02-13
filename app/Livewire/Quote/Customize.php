@@ -59,9 +59,43 @@ class Customize extends Component
     #[on('productSelection')]
     public function productSelection($updatedData){
         $this->productSelection = collect($updatedData);
+
     }
 
-    public function addOptions($variantId, $variantOptionId=false){
-        dump($variantId, $variantOptionId);
+    public function addOptions($variantId, $variantValue){
+        $this->productSelection->transform(function($value, $key) use($variantId, $variantValue){
+            if($key == $this->key){
+                $varintInfo = collect($this->productArr['variant_option'])->sole('id', $variantId);
+                $data['id'] = $varintInfo['id'];
+                $data['option'] = $varintInfo['variant_option_id'];
+
+                if(!in_array($varintInfo['type'], ['text', 'numbers_only_text', 'multi_line_text'])){
+                    $varintOptionInfo = collect($varintInfo['variant_option_value'])->sole('id', $variantValue);
+
+                    $data['value_id'] = $varintOptionInfo['id'];
+                    $data['option'] = $data['option']."_".$varintOptionInfo['variant_option_value_id'];
+                    $data['selected_option'] = $varintOptionInfo["label"];
+
+                } else {
+                    $data['input_text_value'] = $variantValue;
+                }
+                
+                if($varintInfo['options_type'] == "MODIFIERS"){
+                    $data['display_name']   = $varintInfo["name"];
+                    $data['price']          = 0;
+                    $data['price_type']     = NULL;
+                    if(isset($varintInfo['adjusters']) && !empty($varintInfo['adjusters'])){
+                        $data['price'] = $varintInfo['adjusters']['price']["adjuster"];
+                        $data['price_type'] = $varintInfo['adjusters']['price']["adjuster_value"];
+                    }
+                }
+                
+                $value[strtolower($varintInfo['options_type'])][$varintInfo['sort_order']] = $data;
+                $value['bulkpricing'] = $this->productArr['bulkpricing'];
+            }
+            return $value;
+        });
+        dump($this->productSelection);
+        $this->dispatch('updateProductSelction', $this->productSelection);
     }
 }
